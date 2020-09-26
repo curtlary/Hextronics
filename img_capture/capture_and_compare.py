@@ -27,6 +27,6 @@ plat = get_platform_mask(img)
 
 plt.imshow(img)
 plt.show()
-plt.imsho(plat)
+plt.imshow(plat)
 plt.show()
 
