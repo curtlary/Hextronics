@@ -37,8 +37,10 @@ def find_homography(ref_img, img, ref_mask = None, mask = None, thres=None):
     h = cv2.estimateAffinePartial2D(points_ref, points, cv2.RANSAC)[0]
     return matches_img, h
 
-def find_homography_dbscan(ref_img, img, ref_mask = None, mask = None, thres=None):
+def find_homography_dbscan(ref_img, img, ref_mask = None, mask = None, thres=None, eps=30, min_samples=3):
+    # orb = cv2.ORB_create()
     orb = cv2.SIFT_create()
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     
     ref_kpts, ref_des = orb.detectAndCompute(ref_img, ref_mask)
     kpts, des = orb.detectAndCompute(img, mask)
@@ -55,18 +57,33 @@ def find_homography_dbscan(ref_img, img, ref_mask = None, mask = None, thres=Non
         points_ref[i, :] = ref_kpts[match.queryIdx].pt
         points[i, :] = kpts[match.trainIdx].pt
 
-    clustering = DBSCAN(eps=20, min_samples=3).fit(points)
+    clustering = DBSCAN(eps=eps, min_samples=min_samples).fit(points)
         
     most = mode([i for i in clustering.labels_ if i !=-1])
 
     cluster_points = np.array([points[j] for j in range(len(points)) if clustering.labels_[j] == most])
-    # xs = cluster_points[:, 0]
-    # ys = cluster_points[:, 1]
-    cx, cy= cluster_points.mean(axis=0)
+    cluster_points_idx = np.array([j for j in range(len(points)) if clustering.labels_[j] == most])
+    cx, cy = cluster_points.mean(axis=0)
+
+    ref_cluster_points = points_ref[cluster_points_idx]
+    ref_cx, ref_cy = ref_cluster_points.mean(axis=0)
+
+    scale = 0.5 
+    offset_cx = (ref_img.shape[1] // 2 - ref_cx) * scale
+    offset_cy = (ref_img.shape[0] // 2 - ref_cy) * scale
+    cy += offset_cy
+    cx += offset_cx
 
     mask = np.zeros((img.shape[0], img.shape[1]))
-    mask[int(cy-50):int(cy+50), int(cx-50):int(cx+50)] = 1
+    mask_size = 90
+    mask[int(cy-mask_size):int(cy+mask_size), int(cx-mask_size):int(cx+mask_size)] = 1
     mask = mask.astype(np.uint8)
+
+    # masked_img = img.copy()
+    # masked_img[np.where(mask == 0)] = 0
+    # plt.imshow(masked_img)
+    # plt.show()
+
     kpts, des = orb.detectAndCompute(img, mask)
 
     matches = bf.match(ref_des, des)
@@ -100,19 +117,6 @@ def apply_homography(img, h):
     return cv2.warpPerspective(img, h, (width, height))
 
 def get_platform_mask(img, threshold = (130, 255)):
-    # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # blur = cv2.medianBlur(gray, 5)
-    # sharpen_kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
-    # sharpen = cv2.filter2D(blur, -1, sharpen_kernel)
-    # thresh = cv2.threshold(sharpen, threshold[0], threshold[1], cv2.THRESH_BINARY)[1]
-    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
-    # op = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=6)
-    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30,30))
-    # close = cv2.morphologyEx(op, cv2.MORPH_CLOSE, kernel, iterations=2)
-    # close[close==255] = 1
-    # return close 
-    # Converting image to a binary image  
-    # (black and white only image). 
     h,w,_ = img.shape
     mask = np.zeros((h,w))
 
@@ -124,3 +128,32 @@ def decompose_homography(h):
     dy = h[1][2]
     angle = - math.atan2(h[0,1], h[0,0]) * 180 / math.pi
     return dx, dy, angle
+
+def full_workflow(img_path, ref_path = "../imgs/shapes/trident/trident ref.png"):
+    ref_img = (plt.imread(ref_path) * 255).astype(np.uint8)
+    ref_img = ref_img[::-1, :]
+    img = plt.imread(img_path)
+    ym, yb = (-14.172335600907024, 16755.952380952378)
+    xm, xb = (-6.616207060816175, 9863.494415921241)
+
+    matches_img, h, (img_x, img_y) = find_homography_dbscan(ref_img, img)
+    # plt.imshow(matches_img)
+    # plt.show()
+    
+    _, __, angle = decompose_homography(h)
+    center = (img_x, img_y)
+
+    dist = 190
+    drone_center = np.array([img_x, img_y])
+    offset_center = [0,0]
+    
+    angle = -angle
+    
+    button_center = [drone_center[0] + np.cos(np.radians(90+angle)) * dist, drone_center[1] - np.sin(np.radians(90+angle)) * dist]
+        
+    offset_center[0] = button_center[0] - drone_center[0]
+    offset_center[1] = button_center[1] - drone_center[1]
+    but_center = np.array([drone_center[0] + offset_center[0], drone_center[1] + offset_center[1]])
+    real_life = [but_center[1] * ym +yb, but_center[0] * xm + xb]
+
+    return real_life, angle
