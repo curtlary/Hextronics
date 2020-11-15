@@ -40,7 +40,6 @@ def find_homography(ref_img, img, ref_mask = None, mask = None, thres=None):
 def find_homography_dbscan(ref_img, img, ref_mask = None, mask = None, thres=None, eps=30, min_samples=3):
     # orb = cv2.ORB_create()
     orb = cv2.SIFT_create()
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     
     ref_kpts, ref_des = orb.detectAndCompute(ref_img, ref_mask)
     kpts, des = orb.detectAndCompute(img, mask)
@@ -49,6 +48,11 @@ def find_homography_dbscan(ref_img, img, ref_mask = None, mask = None, thres=Non
 
     matches = bf.match(ref_des, des)
     matches = sorted(matches, key = lambda x: x.distance)
+    matches_img = cv2.drawMatches(
+        ref_img, ref_kpts, img, kpts, matches[:50], None,
+    )
+    plt.imshow(matches_img)
+    plt.show()
 
     points_ref = np.zeros((len(matches), 2), dtype=np.float32)
     points = np.zeros((len(matches), 2), dtype=np.float32)
@@ -78,11 +82,6 @@ def find_homography_dbscan(ref_img, img, ref_mask = None, mask = None, thres=Non
     mask_size = 90
     mask[int(cy-mask_size):int(cy+mask_size), int(cx-mask_size):int(cx+mask_size)] = 1
     mask = mask.astype(np.uint8)
-
-    # masked_img = img.copy()
-    # masked_img[np.where(mask == 0)] = 0
-    # plt.imshow(masked_img)
-    # plt.show()
 
     kpts, des = orb.detectAndCompute(img, mask)
 
