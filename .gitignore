@@ -5,3 +5,5 @@ imgs/.DS_Store
 notebooks/.ipynb_checkpoints/*
 *.jpg
 Spot1/*
+.idea/
+*.zip
