@@ -183,5 +183,4 @@ class DroneLocator:
         img = plt.imread(path)
         if img.max() <= 1:
             img = (img * 255)
-            
         return img.astype(np.uint8)
