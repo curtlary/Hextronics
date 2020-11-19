@@ -7,8 +7,8 @@ from typing import Tuple
 import pickle as pkl
 import numpy as np
 import cv2
-
-
+import os
+    
 
 class DroneLocator:
     
@@ -22,7 +22,8 @@ class DroneLocator:
         # drone info params 
         seek_center: Tuple[int, int] = (980, 837), # pixel coordinates of 0,0,0 quad
         angle_offset: int = 87,
-        linreg_path: str = "../cv/offset_model.pkl",
+        linreg_path: str = "offset_model.pkl",
+        #linreg_path: str = "../cv/offset_model.pkl",
         # Image manipulations
         do_clahe: bool = True,
         do_thres: bool = True,
@@ -38,7 +39,12 @@ class DroneLocator:
         self.do_show_circles = show_circles
             
         self.angle_offset = angle_offset
-        self.offset_model = pkl.load(open(linreg_path, "rb")) 
+        
+        script_dir = os.path.dirname(__file__)
+        total_linreg_path = os.path.join(script_dir, linreg_path)
+        self.offset_model = pkl.load(open(total_linreg_path, "rb"))
+        
+        #self.offset_model = pkl.load(open(linreg_path, "rb")) 
         self.do_clahe = do_clahe
         self.do_thres = do_thres
         self.do_morph = do_morph
@@ -54,7 +60,9 @@ class DroneLocator:
             if with_vis:
                 plt.title("Couldn't find QR code")
                 plt.imshow(old_img)
-                plt.show()
+                plt.show(block = False)
+                plt.pause(2)
+                plt.close()
             return False, 0, 0, 0
         qr_center = self.get_qr_center(decoded_objs)
 
@@ -72,6 +80,8 @@ class DroneLocator:
 
         if circle_center is not None:
             angle = self.theta(circle_center, qr_center) % 360
+            if angle > 180:
+                angle = angle -360
             if with_vis:
                 self.visualize_results(old_img, circle_center, qr_center, angle, pred_offset)
         elif with_vis:
@@ -89,7 +99,9 @@ class DroneLocator:
         plt.imshow(img)
         plt.scatter(qr_center[0], qr_center[1])
         plt.plot([self.seek_center[0], qr_center[0] ], [self.seek_center[1], qr_center[1]])
-        plt.show()
+        plt.show(block = False)
+        plt.pause(2)
+        plt.close()
         
     def show_circles(self, img, circles):
         img = img.copy()
@@ -102,7 +114,9 @@ class DroneLocator:
                 cv2.circle(img, center, radius, (255, 0, 255), 3)
 
         plt.imshow(img)
-        plt.show()
+        plt.show(block = False)
+        plt.pause(2)
+        plt.close()
     
     def get_circles(self, im):
         rows = im.shape[0]
@@ -169,5 +183,4 @@ class DroneLocator:
         img = plt.imread(path)
         if img.max() <= 1:
             img = (img * 255)
-            
         return img.astype(np.uint8)

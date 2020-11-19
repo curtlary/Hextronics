@@ -5,7 +5,7 @@ import time
 import subprocess
 
 #read the absolute path
-script_dir = os.path.dirname(__file__)
+script_dir = "/home/pi/Hextronics/"
 
 #call the .sh to capture the image
 os.system('./staticCam.sh')
