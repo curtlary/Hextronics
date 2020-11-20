@@ -18,22 +18,21 @@ class ActuatorController:
         )
 
     def write(self, command):
-        return True
-#        self.ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1,dsrdtr=False)
-#        self.ser.flush()
-#
-#        starttime = datetime.now()
-#        output = str(command) + " \n"
-#        self.ser.write(output.encode('utf-8'))
-#        while True:
-#            if self.ser.in_waiting > 0:
-#                line = self.ser.readline().decode('utf-8').rstrip()
-#                print(line)
-#                if(line == "Arrived!"):
-#                    break
-#            timedelta = datetime.now() - starttime
-#            if timedelta.total_seconds() >= 10:
-#                break
+        self.ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1,dsrdtr=False)
+        self.ser.flush()
+
+        starttime = datetime.now()
+        output = str(command) + " \n"
+        self.ser.write(output.encode('utf-8'))
+        while True:
+            if self.ser.in_waiting > 0:
+                line = self.ser.readline().decode('utf-8').rstrip()
+                print(line)
+                if(line == "Arrived!"):
+                    break
+            timedelta = datetime.now() - starttime
+            if timedelta.total_seconds() >= 10:
+                break
 
     def move_to(self, x: Union[int, str], y: Union[int, str], theta: Union[int, str]):
         if not(type(x) is str or type(x) is int):

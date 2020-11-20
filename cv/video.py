@@ -11,6 +11,7 @@ class VideoMaker:
         fourcc = cv2.VideoWriter_fourcc(*'MP4V')
         self.out = cv2.VideoWriter(f'{run_name}.mp4', fourcc, 20.0, (640,480))
 
+
     def get_img(self):
         if self.cap.isOpened():
             ret, img = self.cap.read()
@@ -62,4 +63,31 @@ class VideoMaker:
         self.cap.release()
         self.out.release()
         cv2.destroyAllWindows()
-       
+
+class VideoMaker4Thread(VideoMaker):
+    def __init__(self, run_name="Test", locator=None):
+        super().__init__(run_name)
+        _, self.curr_img = self.cap.read()
+        self.locator = locator
+        self.found_qr = False
+        self.dx = 0
+        self.dy = 0
+        self.angle = 0
+
+    def get_scan(self):
+        return self.found_qr, self.dx, self.dy, self.angle, self.curr_img
+
+    def loop(self):
+        while self.cap.isOpened():
+            print("oi")
+            ret, self.curr_img = self.cap.read()
+            if ret:
+                self.found_qr, self.dx, self.dy, self.angle, frame = self.locator(self.curr_img, with_video=True)
+                self.curr_img = frame
+                frame = cv2.flip(frame, 0)
+                self.out.write(frame)
+                cv2.imshow("Gauntry View", frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            else:
+                break
