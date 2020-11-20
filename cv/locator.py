@@ -51,7 +51,7 @@ class DroneLocator:
         self.morph_kernel = np.ones((morph_kernel, morph_kernel), np.uint8)
         self.seek_center = np.array(seek_center)
 
-    def __call__(self, img, with_vis = False):
+    def __call__(self, img, with_vis = False, with_video=False):
         old_img = img.copy()
         img = self.process_img(img)
         decoded_objs = pyzbar.decode(img)
@@ -63,6 +63,8 @@ class DroneLocator:
                 plt.show(block = False)
                 plt.pause(2)
                 plt.close()
+            if with_video:
+                return False, 0, 0, 0, old_img
             return False, 0, 0, 0
         qr_center = self.get_qr_center(decoded_objs)
 
@@ -78,15 +80,23 @@ class DroneLocator:
 
         angle = 404 # value for not found circle center
 
+        img_ret = old_img.copy()
         if circle_center is not None:
             angle = self.theta(circle_center, qr_center) % 360
             if angle > 180:
                 angle = angle -360
             if with_vis:
                 self.visualize_results(old_img, circle_center, qr_center, angle, pred_offset)
+            if with_video:
+                img_ret = self.make_frame(old_img, circle_center, qr_center, angle, pred_offset)
         elif with_vis:
             self.visualize_results(old_img, None, qr_center, "did not find button", pred_offset)
-        
+
+        if circle_center is None and with_video:
+            img_ret = self.make_frame(old_img, None, qr_center, "did not find button", pred_offset)
+
+        if with_video:
+            return True, pred_offset[0], pred_offset[1], angle, img_ret
         return True, pred_offset[0], pred_offset[1], angle
     
     def visualize_results(self, img, circle_center, qr_center, angle, pred_offset):
@@ -102,7 +112,20 @@ class DroneLocator:
         plt.show(block = False)
         plt.pause(2)
         plt.close()
-        
+
+    def scatter(self, img, x, y):
+        cv2.circle(img, (x, y), 10, (0, 0, 255), 20)
+
+    def make_frame(self, img, circle_center, qr_center, angle, pred_offset):
+        img = img.copy()
+        if circle_center is not None:
+            cv2.line(img, circle_center[:2], qr_center[:2], (255, 0, 0), 10)
+            cv2.circle(img, (int(circle_center[0]), int(circle_center[1])), 47, (255, 0, 255), 3)
+
+        cv2.circle(img, qr_center[:2])
+        cv2.line(img, self.seek_center[:2], qr_center[:2], (255, 0, 255), 10)
+        return img
+
     def show_circles(self, img, circles):
         img = img.copy()
         if circles is not None:

@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
 import os
-from os import environ
-import sys
-import time
-import subprocess
-import datetime
 from cv.locator import DroneLocator
-import matplotlib.pyplot as plt
 import numpy as np
 from serialWrite import write
-import cv2
 
 
 def movecam(arr, cap):
