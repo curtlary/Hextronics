@@ -18,12 +18,12 @@ while True:
     if readGPIO():
         print("INITIATED")
         controller.open_roof()
-        time.sleep(20)
+#        time.sleep(20)
         planner.search_main()
-        time.sleep(240)
-        controller.closer_roof()
-        controller.closer_roof()
-        controller.closer_roof()
+#        time.sleep(240)
+        controller.close_roof()
+        controller.close_roof()
+        controller.close_roof()
         break
 video_maker.close()
 

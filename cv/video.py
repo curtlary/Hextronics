@@ -2,17 +2,19 @@ import cv2
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 
 class VideoMaker:
     def __init__(self, run_name="Test"):
         self.cap = cv2.VideoCapture(0)
-        fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        self.out = cv2.VideoWriter(f'{run_name}.avi', fourcc, 20.0, (640,480))
+        fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+        self.out = cv2.VideoWriter(f'{run_name}.mp4', fourcc, 20.0, (640,480))
 
     def get_img(self):
         if self.cap.isOpened():
             ret, img = self.cap.read()
+            print(ret)
         else:
             print("Camera Module not found")
             # directory for camera image placement
@@ -48,9 +50,16 @@ class VideoMaker:
         if ret:
             frame = cv2.flip(frame, 0)
             self.out.write(frame)
-        cv2.imshow('Gantry View', frame)
+        #cv2.imshow('Gantry View', frame)
+        #cv2.waitKey(1)
+        plt.imshow(frame)
+        plt.show()
+        print("oito")
+        time.sleep(5)
+
 
     def close(self):
         self.cap.release()
         self.out.release()
         cv2.destroyAllWindows()
+       
