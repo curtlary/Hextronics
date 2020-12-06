@@ -193,15 +193,16 @@ class DroneLocator:
         # return circles
         points = np.where(im > 128)
         points = np.vstack([points[1], points[0]]).T
-        clustering = DBSCAN(eps=p1, min_samples=100).fit(points)
+        # clustering = DBSCAN(eps=p1, min_samples=100).fit(points)
 
-        if np.all(clustering.labels_ == -1):
-            return []
-        most = mode([i for i in clustering.labels_ if i != -1])
-
-        cluster_points = np.array([points[j] for j in range(len(points)) if clustering.labels_[j] == most])
-        cluster_points_idx = np.array([j for j in range(len(points)) if clustering.labels_[j] == most])
-        cx, cy = cluster_points.mean(axis=0)
+        # if np.all(clustering.labels_ == -1):
+        #     return []
+        # most = mode([i for i in clustering.labels_ if i != -1])
+        #
+        # cluster_points = np.array([points[j] for j in range(len(points)) if clustering.labels_[j] == most])
+        # cluster_points_idx = np.array([j for j in range(len(points)) if clustering.labels_[j] == most])
+        cx, cy= points.mean(axis=1)
+        # cx, cy = cluster_points.mean(axis=0)
         return np.array([[cx, cy, sum(self.fine_radius_range) / 2.]])
 
     def matching_circle_center(self, circles, qr_center):
@@ -255,7 +256,8 @@ class DroneLocator:
         return center
     
     def imread(self, path):
-        img = plt.imread(path)
+        img = np.array(plt.imread(path))
+       
         if img.max() <= 1:
             img = (img * 255)
         return img.astype(np.uint8)
