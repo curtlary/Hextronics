@@ -29,7 +29,7 @@ def movecam(arr):
 
 def scan():
     locator = DroneLocator(
-        lin_reg_path="cv/offset_model.pkl",
+        linreg_path="cv/offset_model.pkl",
         canny_thresholds=(200, 200),
         show_circles=False,
         rough_radius_range=(20, 60),
