@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import datetime
 import sys
@@ -5,10 +6,10 @@ import time
 import subprocess
 
 #read the absolute path
-script_dir = "/home/pi/Hextronics/camera/"
+script_dir = "/home/pi/Hextronics/endEffectorCaptures/"
 
 #call the .sh to capture the image
-os.system('./camCapture.sh')
+os.system('./endEffectorCapture.sh')
 
 wd = os.getcwd()
 os.chdir("camera")
@@ -24,3 +25,4 @@ abs_file_path = os.path.join(script_dir, captured_path)
 
 print(script_dir)
 print(abs_file_path)
+
