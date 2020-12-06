@@ -208,8 +208,6 @@ class DroneLocator:
         possible = []
         for circle in circles:
             dist = np.linalg.norm(qr_center - circle[:2])
-            print(self.qr2but_range)
-            print(dist)
             if (
                 self.qr2but_range[0] < dist < self.qr2but_range[1]
                 and self.fine_radius_range[0] < circle[2] < self.fine_radius_range[1]
