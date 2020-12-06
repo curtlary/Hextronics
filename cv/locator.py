@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
+from sklearn.cluster import DBSCAN
+
 from PIL import Image
 from pyzbar import pyzbar
 import time
@@ -8,6 +10,7 @@ import pickle as pkl
 import numpy as np
 import cv2
 import os
+from statistics import mode
     
 
 class DroneLocator:
@@ -19,7 +22,10 @@ class DroneLocator:
         fine_radius_range: Tuple[int, int] = (30, 67),
         canny_thresholds: Tuple[int, int] = (70, 30),
         qr2but_range: Tuple[int, int] = (163, 193),
-        # drone info params 
+        use_color_filter: bool = True,
+        button_color_hsv_low: Tuple[int, int, int] = (15, 50, 100),
+        button_color_hsv_high: Tuple[int, int, int] = (40, 255, 255),
+        # drone info params
         seek_center: Tuple[int, int] = (980, 837), # pixel coordinates of 0,0,0 quad
         angle_offset: int = 87,
         linreg_path: str = "offset_model.pkl",
@@ -37,21 +43,27 @@ class DroneLocator:
         self.canny_thresholds = canny_thresholds
         self.qr2but_range = qr2but_range
         self.do_show_circles = show_circles
-            
         self.angle_offset = angle_offset
         
-        script_dir = os.path.dirname(__file__)
-        total_linreg_path = os.path.join(script_dir, linreg_path)
+        # script_dir = os.path.dirname(__file__)
+        # total_linreg_path = os.path.join(script_dir, linreg_path)
+        total_linreg_path = linreg_path
         self.offset_model = pkl.load(open(total_linreg_path, "rb"))
         
-        #self.offset_model = pkl.load(open(linreg_path, "rb")) 
         self.do_clahe = do_clahe
         self.do_thres = do_thres
         self.do_morph = do_morph
         self.morph_kernel = np.ones((morph_kernel, morph_kernel), np.uint8)
         self.seek_center = np.array(seek_center)
 
-    def __call__(self, img, with_vis = False):
+        # button
+        self.use_color_filter = use_color_filter
+        self.hsv_range = (
+            button_color_hsv_low,
+            button_color_hsv_high,
+        )
+
+    def __call__(self, img, with_vis = False, with_video=False):
         old_img = img.copy()
         img = self.process_img(img)
         decoded_objs = pyzbar.decode(img)
@@ -63,14 +75,16 @@ class DroneLocator:
                 plt.show(block = False)
                 plt.pause(2)
                 plt.close()
+            if with_video:
+                return False, 0, 0, 0, old_img
             return False, 0, 0, 0
         qr_center = self.get_qr_center(decoded_objs)
 
         pred_offset = self.offset_model.predict([self.seek_center - qr_center])[0].round()
 
-        circles = self.get_circles(cv2.cvtColor(old_img, cv2.COLOR_RGB2GRAY)) 
+        circles = self.get_circles(old_img)
         if self.do_show_circles:
-            self.show_circles(old_img, circles)
+            self.show_circles(old_img, circles, qr_center)
         if circles is None:
             circle_center = None
         else:
@@ -78,15 +92,23 @@ class DroneLocator:
 
         angle = 404 # value for not found circle center
 
+        img_ret = old_img.copy()
         if circle_center is not None:
             angle = self.theta(circle_center, qr_center) % 360
             if angle > 180:
                 angle = angle -360
             if with_vis:
                 self.visualize_results(old_img, circle_center, qr_center, angle, pred_offset)
+            if with_video:
+                img_ret = self.make_frame(old_img, circle_center, qr_center, angle, pred_offset)
         elif with_vis:
             self.visualize_results(old_img, None, qr_center, "did not find button", pred_offset)
-        
+
+        if circle_center is None and with_video:
+            img_ret = self.make_frame(old_img, None, qr_center, "did not find button", pred_offset)
+
+        if with_video:
+            return True, pred_offset[0], pred_offset[1], angle, img_ret
         return True, pred_offset[0], pred_offset[1], angle
     
     def visualize_results(self, img, circle_center, qr_center, angle, pred_offset):
@@ -99,12 +121,29 @@ class DroneLocator:
         plt.imshow(img)
         plt.scatter(qr_center[0], qr_center[1])
         plt.plot([self.seek_center[0], qr_center[0] ], [self.seek_center[1], qr_center[1]])
-        plt.show(block = False)
-        plt.pause(2)
-        plt.close()
-        
-    def show_circles(self, img, circles):
+        plt.show()
+        # plt.show(block = False)
+        # plt.pause(2)
+        # plt.close()
+
+    def scatter(self, img, x, y):
+        cv2.circle(img, (x, y), 10, (0, 0, 255), 20)
+
+    def make_frame(self, img, circle_center, qr_center, angle, pred_offset):
         img = img.copy()
+        if circle_center is not None:
+            cv2.line(img, circle_center[:2], qr_center[:2], (255, 0, 0), 10)
+            cv2.circle(img, (int(circle_center[0]), int(circle_center[1])), 47, (255, 0, 255), 3)
+
+        cv2.circle(img, qr_center[:2])
+        cv2.line(img, self.seek_center[:2], qr_center[:2], (255, 0, 255), 10)
+        return img
+
+    def show_circles(self, img, circles, qr_center=None):
+        if self.use_color_filter:
+            img = self.color_filt(img)
+        orig_img = img.copy()
+        img = orig_img.copy()
         if circles is not None:
             circles = np.uint16(np.around(circles))
             for i in circles[0, :]:
@@ -113,25 +152,61 @@ class DroneLocator:
                 radius = i[2]
                 cv2.circle(img, center, radius, (255, 0, 255), 3)
 
+        plt.title("All circles found")
         plt.imshow(img)
-        plt.show(block = False)
-        plt.pause(2)
-        plt.close()
+        plt.show()
+
+        img = orig_img.copy()
+        if circles is not None:
+            circles = np.uint16(np.around(circles))
+            for i in circles[0]:
+                if qr_center is not None:
+                    dist = np.linalg.norm(qr_center - i[:2])
+                else:
+                    dist = sum(self.fine_radius_range) / 2
+                if (
+                        self.qr2but_range[0] < dist < self.qr2but_range[1]
+                        and self.fine_radius_range[0] < i[2] < self.fine_radius_range[1]
+                ):
+                    center = (i[0], i[1])
+                    cv2.circle(img, center, 1, (0, 100, 100), 3)
+                    radius = i[2]
+                    cv2.circle(img, center, radius, (0, 255, 255), 3)
+
+        plt.title("Circles within thresholds")
+        plt.imshow(img)
+        plt.show()
+        # plt.pause(2)
+        # plt.close()
     
     def get_circles(self, im):
+        if self.use_color_filter:
+            im = self.color_filt(im)
         rows = im.shape[0]
         p1, p2 = self.canny_thresholds
-        min_r, max_r = self.rough_radius_range
-        circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, rows / 8,
-                                   param1=p1, param2=p2,
-                                   minRadius=min_r, maxRadius=max_r)
-        if circles is not None:
-            circles = np.around(circles)
-        return circles
+        # min_r, max_r = self.rough_radius_range
+        # circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, rows / 8,
+        #                            param1=p1, param2=p2,
+        #                            minRadius=min_r, maxRadius=max_r)
+        # if circles is not None:
+        #     circles = np.around(circles)
+        # return circles
+        points = np.where(im > 128)
+        points = np.vstack([points[1], points[0]]).T
+        clustering = DBSCAN(eps=p1, min_samples=100).fit(points)
+
+        if np.all(clustering.labels_ == -1):
+            return []
+        most = mode([i for i in clustering.labels_ if i != -1])
+
+        cluster_points = np.array([points[j] for j in range(len(points)) if clustering.labels_[j] == most])
+        cluster_points_idx = np.array([j for j in range(len(points)) if clustering.labels_[j] == most])
+        cx, cy = cluster_points.mean(axis=0)
+        return np.array([[cx, cy, sum(self.fine_radius_range) / 2.]])
 
     def matching_circle_center(self, circles, qr_center):
         possible = []
-        for circle in circles[0]:
+        for circle in circles:
             dist = np.linalg.norm(qr_center - circle[:2])
             if (
                 self.qr2but_range[0] < dist < self.qr2but_range[1]
@@ -184,3 +259,13 @@ class DroneLocator:
         if img.max() <= 1:
             img = (img * 255)
         return img.astype(np.uint8)
+
+    def color_filt(self, img):
+        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+        lower = np.array(self.hsv_range[0])
+        upper = np.array(self.hsv_range[1])
+        mask = cv2.inRange(hsv, lower, upper)
+        mask = cv2.erode(mask, self.morph_kernel, iterations=1)
+        # result = cv2.bitwise_and(img, img, mask=mask)
+        return mask
+

@@ -10,3 +10,5 @@ Spot1/*
 *.zip
 imgs/*
 ColorFilter Testing/
+*__pycache__/
+*.mp4
