@@ -28,7 +28,16 @@ def movecam(arr):
 
 
 def scan():
-    locator = DroneLocator()
+    locator = DroneLocator(
+        lin_reg_path="cv/offset_model.pkl",
+        canny_thresholds=(200, 200),
+        show_circles=False,
+        rough_radius_range=(20, 60),
+        fine_radius_range=(30, 60),
+        qr2but_range=(150, 600),
+        button_color_hsv_low=(25, 50, 100),
+        button_color_hsv_high=(40, 255, 255),
+        )
 
     #directory for camera image placement
     script_dir = "/home/pi/Hextronics/endEffectorCaptures/"
