@@ -51,8 +51,6 @@ class VideoMaker:
         if ret:
             frame = cv2.flip(frame, 0)
             self.out.write(frame)
-        #cv2.imshow('Gantry View', frame)
-        #cv2.waitKey(1)
         plt.imshow(frame)
         plt.show()
         print("oito")
