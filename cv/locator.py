@@ -26,7 +26,7 @@ class DroneLocator:
         button_color_hsv_low: Tuple[int, int, int] = (15, 50, 100),
         button_color_hsv_high: Tuple[int, int, int] = (40, 255, 255),
         # drone info params
-        seek_center: Tuple[int, int] = (980, 837), # pixel coordinates of 0,0,0 quad
+        seek_center: Tuple[int, int] = (960, 650), # pixel coordinates of 0,0,0 quad
         angle_offset: int = 87,
         linreg_path: str = "offset_model.pkl",
         #linreg_path: str = "../cv/offset_model.pkl",
