@@ -12,3 +12,7 @@ imgs/*
 ColorFilter Testing/
 *__pycache__/
 *.mp4
+cv/model_tf*
+cv/checkpoint
+.ipynb_checkpoints
+
