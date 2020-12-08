@@ -65,6 +65,9 @@ class PathPlanner:
             self.video.record_frame(ret, annotated_frame)
             self.direct_line(dx, dy, angle)
 
+    def wait(self):
+        pass
+
 
 class PathPlanner4Thread(PathPlanner):
 

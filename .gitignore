@@ -15,3 +15,5 @@ ColorFilter Testing/
 */__pycache__/*
 __pycache__
 cv/model_tf*
+cv/checkpoint
+.ipynb_checkpoints
