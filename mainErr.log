@@ -3391,4 +3391,53 @@ Unable to init server: Could not connect: Connection refused
 [0m[1m--- Processing captured image...
 [0m[0mDisabling banner.
 [0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-08_170615.jpg'.
-[0m
+[0mstty: /dev/ttyACM0: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:796): Gdk-CRITICAL **: 17:26:48.593: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:796): Gdk-CRITICAL **: 17:26:48.598: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+stty: /dev/ttyACM0: No such file or directory
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 265, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+FileNotFoundError: [Errno 2] No such file or directory: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 14, in <module>
+    write("goto_100_-100_100_-100")
+  File "/home/pi/Hextronics/serWrite.py", line 9, in write
+    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1,dsrdtr=False)
+  File "/usr/lib/python3/dist-packages/serial/serialutil.py", line 240, in __init__
+    self.open()
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 268, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0'
+stty: /dev/ttyACM0: No such file or directory
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:802): Gdk-CRITICAL **: 17:54:55.120: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:802): Gdk-CRITICAL **: 17:54:55.124: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+stty: /dev/ttyACM0: No such file or directory
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 265, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+FileNotFoundError: [Errno 2] No such file or directory: '/dev/ttyACM0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 14, in <module>
+    write("goto_100_-100_100_-100")
+  File "/home/pi/Hextronics/serWrite.py", line 9, in write
+    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1,dsrdtr=False)
+  File "/usr/lib/python3/dist-packages/serial/serialutil.py", line 240, in __init__
+    self.open()
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 268, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+serial.serialutil.SerialException: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0'
