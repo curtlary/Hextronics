@@ -18,9 +18,9 @@ class DroneLocator:
     def __init__(
         self,
         # circle finder params
-        rough_radius_range: Tuple[int, int] = (25, 55),
+        rough_radius_range: Tuple[int, int] = (30, 50),
         fine_radius_range: Tuple[int, int] = (30, 67),
-        canny_thresholds: Tuple[int, int] = (70, 30),
+        canny_thresholds: Tuple[int, int] = (100, 10),
         qr2but_range: Tuple[int, int] = (163, 193),
         use_color_filter: bool = True,
         button_color_hsv_low: Tuple[int, int, int] = (15, 50, 100),
@@ -68,9 +68,9 @@ class DroneLocator:
     def __call__(self, img, with_vis = False, with_video=False):
         old_img = img.copy()
         img = self.process_img(img)
-        plt.imshow(img)
+        # plt.imshow(img)
         # plt.show()
-        # plt.pause(2)
+        # plt.pause(1)
         # plt.close()
 
         decoded_objs = pyzbar.decode(img)
@@ -89,7 +89,7 @@ class DroneLocator:
 
         pred_offset = self.offset_model.predict([self.seek_center - qr_center])[0].round()
 
-        
+
         if self.do_show_circles:
             self.show_circles(old_img, circles, qr_center)
         if circles is None:
@@ -159,8 +159,9 @@ class DroneLocator:
                 radius = i[2]
                 cv2.circle(img, center, radius, (255, 0, 255), 3)
 
-        plt.title("All circles found")
-        plt.imshow(img)
+        # plt.title("All circles found")
+        # plt.imshow(img)
+
        # plt.show()
 
         img = orig_img.copy()
@@ -187,41 +188,17 @@ class DroneLocator:
         # plt.close()
     
     def get_circles(self, im):
-        if self.use_color_filter:
-            im = self.color_filt(im)
-            # plt.imshow(im)
-            # plt.show()
-            # plt.pause(2)
-            # plt.close()
-        n_im = im / 255
-        
-        #if n_im.sum() <1500:
-        #    return None
-        rows = im.shape[0]
-        # p1, p2 = self.canny_thresholds
-        # min_r, max_r = self.rough_radius_range
-        # circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, rows / 8,
-        #                            param1=p1, param2=p2,
-        #                            minRadius=min_r, maxRadius=max_r)
-        # if circles is not None:
-        #     circles = np.around(circles)
-        # return circles
-        points = np.where(im > 128)
-        points = np.vstack([points[1], points[0]]).T
-        
-        # clustering = DBSCAN(eps=p1, min_samples=100).fit(points)
-
-        # if np.all(clustering.labels_ == -1):
-        #     return []
-        # most = mode([i for i in clustering.labels_ if i != -1])
-        #
-        # cluster_points = np.array([points[j] for j in range(len(points)) if clustering.labels_[j] == most])
-        # cluster_points_idx = np.array([j for j in range(len(points)) if clustering.labels_[j] == most])
-        oi = points.mean(axis=0)
-        print(oi)
-        cx, cy = oi
-        # cx, cy = cluster_points.mean(axis=1)
-        return np.array([[cx, cy, sum(self.fine_radius_range) / 2.]])
+        im = self.color_filt(im)
+        p1, p2 = self.canny_thresholds
+        min_r, max_r = self.rough_radius_range
+        circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, 20,
+                                   param1=100, param2=10, minRadius=30, maxRadius=50)
+        # circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, 20,
+        #                            param1=p1, param2=p2, minRadius=min_r, maxRadius=max_r)
+        if circles is not None:
+            circles = np.around(circles)
+            return circles[0]
+        return []
 
     def matching_circle_center(self, circles, qr_center):
         possible = []
@@ -286,6 +263,53 @@ class DroneLocator:
         upper = np.array(self.hsv_range[1])
         mask = cv2.inRange(hsv, lower, upper)
         mask = cv2.erode(mask, self.morph_kernel, iterations=2)
-        # result = cv2.bitwise_and(img, img, mask=mask)
         return mask
+
+class ButtonFinder:
+
+    def __init__(
+            self,
+            radius: int = 45,
+            hsv_low: Tuple[int, int, int] = (15, 50, 100),
+            hsv_high: Tuple[int, int, int] = (40, 255, 255),
+            morph_kernel: int = 3,
+            button_color_hsv_low=(27, 120, 200),
+            button_color_hsv_high=(35, 180, 255),
+    ):
+        self.hsv_low = hsv_low
+        self.hsv_high = hsv_high
+        self.radius = radius
+        self.morph_kernel = np.ones((morph_kernel, morph_kernel), np.uint8)
+
+    def find(self, im):
+        im = self.color_filt(im)
+        plt.imshow(im)
+        plt.show()
+
+        circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, 20,
+                                  param1=100, param2=10, minRadius=30, maxRadius=50)
+        print(circles)
+        circles = np.uint16(np.around(circles))
+        for i in circles[0, :]:
+            # draw the outer circle
+            cv2.circle(im, (i[0], i[1]), i[2], (0, 255, 0), 2)
+            # draw the center of the circle
+            cv2.circle(im, (i[0], i[1]), 2, (0, 0, 255), 3)
+        plt.imshow(im)
+        plt.show()
+
+        points = np.where(im > 128)
+        points = np.vstack([points[1], points[0]]).T
+        oi = points.mean(axis=0)
+        cx, cy = oi
+        return np.array([[cx, cy, sum(self.radius) / 2.]])
+
+    def color_filt(self, img):
+        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+        lower = np.array(self.hsv_low)
+        upper = np.array(self.hsv_high)
+        mask = cv2.inRange(hsv, lower, upper)
+        mask = cv2.erode(mask, self.morph_kernel , iterations=2)
+        return mask
+
 
