@@ -12,3 +12,6 @@ imgs/*
 ColorFilter Testing/
 *__pycache__/
 *.mp4
+*/__pycache__/*
+__pycache__
+cv/model_tf*

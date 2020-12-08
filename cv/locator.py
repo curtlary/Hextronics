@@ -54,8 +54,10 @@ class DroneLocator:
         self.do_thres = do_thres
         self.do_morph = do_morph
         self.morph_kernel = np.ones((morph_kernel, morph_kernel), np.uint8)
+        
         self.seek_center = np.array(seek_center)
-
+        self.seek_but = np.array(seek_center)
+        self.seek_but[1] += 100
         # button
         self.use_color_filter = use_color_filter
         self.hsv_range = (
@@ -66,15 +68,20 @@ class DroneLocator:
     def __call__(self, img, with_vis = False, with_video=False):
         old_img = img.copy()
         img = self.process_img(img)
-        decoded_objs = pyzbar.decode(img)
+        plt.imshow(img)
+        # plt.show()
+        # plt.pause(2)
+        # plt.close()
 
+        decoded_objs = pyzbar.decode(img)
+        circles = self.get_circles(old_img)
         if len(decoded_objs) == 0:
-            if with_vis:
-                plt.title("Couldn't find QR code")
-                plt.imshow(old_img)
-                plt.show(block = False)
-                plt.pause(2)
-                plt.close()
+            #if with_vis:
+                # plt.title("Couldn't find QR code")
+                # plt.imshow(old_img)
+                # plt.show(block = False)
+                # plt.pause(2)
+                # plt.close()
             if with_video:
                 return False, 0, 0, 0, old_img
             return False, 0, 0, 0
@@ -82,7 +89,7 @@ class DroneLocator:
 
         pred_offset = self.offset_model.predict([self.seek_center - qr_center])[0].round()
 
-        circles = self.get_circles(old_img)
+        
         if self.do_show_circles:
             self.show_circles(old_img, circles, qr_center)
         if circles is None:
@@ -121,10 +128,9 @@ class DroneLocator:
         plt.imshow(img)
         plt.scatter(qr_center[0], qr_center[1])
         plt.plot([self.seek_center[0], qr_center[0] ], [self.seek_center[1], qr_center[1]])
-        plt.show()
-        # plt.show(block = False)
-        # plt.pause(2)
-        # plt.close()
+        plt.show(block = False)
+        plt.pause(1)
+        plt.close()
 
     def scatter(self, img, x, y):
         cv2.circle(img, (x, y), 10, (0, 0, 255), 20)
@@ -142,6 +148,7 @@ class DroneLocator:
     def show_circles(self, img, circles, qr_center=None):
         if self.use_color_filter:
             img = self.color_filt(img)
+        
         orig_img = img.copy()
         img = orig_img.copy()
         if circles is not None:
@@ -154,7 +161,7 @@ class DroneLocator:
 
         plt.title("All circles found")
         plt.imshow(img)
-        plt.show()
+       # plt.show()
 
         img = orig_img.copy()
         if circles is not None:
@@ -173,17 +180,25 @@ class DroneLocator:
                     radius = i[2]
                     cv2.circle(img, center, radius, (0, 255, 255), 3)
 
-        plt.title("Circles within thresholds")
-        plt.imshow(img)
-        plt.show()
+        # plt.title("Circles within thresholds")
+        # plt.imshow(img)
+        # plt.show()
         # plt.pause(2)
         # plt.close()
     
     def get_circles(self, im):
         if self.use_color_filter:
             im = self.color_filt(im)
+            # plt.imshow(im)
+            # plt.show()
+            # plt.pause(2)
+            # plt.close()
+        n_im = im / 255
+        
+        #if n_im.sum() <1500:
+        #    return None
         rows = im.shape[0]
-        p1, p2 = self.canny_thresholds
+        # p1, p2 = self.canny_thresholds
         # min_r, max_r = self.rough_radius_range
         # circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, rows / 8,
         #                            param1=p1, param2=p2,
@@ -193,6 +208,7 @@ class DroneLocator:
         # return circles
         points = np.where(im > 128)
         points = np.vstack([points[1], points[0]]).T
+        
         # clustering = DBSCAN(eps=p1, min_samples=100).fit(points)
 
         # if np.all(clustering.labels_ == -1):
@@ -201,8 +217,10 @@ class DroneLocator:
         #
         # cluster_points = np.array([points[j] for j in range(len(points)) if clustering.labels_[j] == most])
         # cluster_points_idx = np.array([j for j in range(len(points)) if clustering.labels_[j] == most])
-        cx, cy= points.mean(axis=1)
-        # cx, cy = cluster_points.mean(axis=0)
+        oi = points.mean(axis=0)
+        print(oi)
+        cx, cy = oi
+        # cx, cy = cluster_points.mean(axis=1)
         return np.array([[cx, cy, sum(self.fine_radius_range) / 2.]])
 
     def matching_circle_center(self, circles, qr_center):
@@ -267,7 +285,7 @@ class DroneLocator:
         lower = np.array(self.hsv_range[0])
         upper = np.array(self.hsv_range[1])
         mask = cv2.inRange(hsv, lower, upper)
-        mask = cv2.erode(mask, self.morph_kernel, iterations=1)
+        mask = cv2.erode(mask, self.morph_kernel, iterations=2)
         # result = cv2.bitwise_and(img, img, mask=mask)
         return mask
 

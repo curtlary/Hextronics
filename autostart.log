@@ -7493,3 +7493,417 @@ Traceback (most recent call last):
   File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 268, in open
     raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
 serial.serialutil.SerialException: [Errno 2] could not open port /dev/ttyACM0: [Errno 2] No such file or directory: '/dev/ttyACM0'
+  File "/home/pi/Hextronics/IndoorMain.py", line 19
+    if(not landed.checkMotion()):
+    ^
+IndentationError: unexpected indent
+  File "/home/pi/Hextronics/IndoorMain.py", line 19
+    if(not landed.checkMotion()):
+    ^
+IndentationError: unexpected indent
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:694): Gdk-CRITICAL **: 20:40:56.830: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:694): Gdk-CRITICAL **: 20:40:56.834: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:1136): Gdk-CRITICAL **: 20:54:05.461: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:1136): Gdk-CRITICAL **: 20:54:05.464: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:803): Gdk-CRITICAL **: 21:03:33.488: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:803): Gdk-CRITICAL **: 21:03:33.492: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:807): Gdk-CRITICAL **: 21:05:18.605: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:807): Gdk-CRITICAL **: 21:05:18.610: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:716): Gdk-CRITICAL **: 21:16:41.946: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:716): Gdk-CRITICAL **: 21:16:41.950: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:714): Gdk-CRITICAL **: 21:29:15.348: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:714): Gdk-CRITICAL **: 21:29:15.353: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:646): Gdk-CRITICAL **: 21:36:49.288: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:646): Gdk-CRITICAL **: 21:36:49.293: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:678): Gdk-CRITICAL **: 21:39:20.341: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:678): Gdk-CRITICAL **: 21:39:20.344: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 2, in <module>
+    from sklearn.linear_model import LinearRegression
+ModuleNotFoundError: No module named 'sklearn'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:787): Gdk-CRITICAL **: 21:49:21.985: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:787): Gdk-CRITICAL **: 21:49:21.990: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 9, in <module>
+    from scan import main
+  File "/home/pi/Hextronics/scan.py", line 9, in <module>
+    from cv.locator import DroneLocator
+  File "/home/pi/Hextronics/cv/locator.py", line 6, in <module>
+    from pyzbar import pyzbar
+ModuleNotFoundError: No module named 'pyzbar'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:811): Gdk-CRITICAL **: 21:52:30.094: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:811): Gdk-CRITICAL **: 21:52:30.099: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 10, in <module>
+    import landed
+  File "/home/pi/Hextronics/landed.py", line 5, in <module>
+    import imutils
+ModuleNotFoundError: No module named 'imutils'
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:792): Gdk-CRITICAL **: 21:54:18.995: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:792): Gdk-CRITICAL **: 21:54:19.001: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 501, in read
+    'device reports readiness to read but returned no data '
+serial.serialutil.SerialException: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/pi/Hextronics/IndoorMain.py", line 14, in <module>
+    write("goto_100_-100_100_-100")
+  File "/home/pi/Hextronics/serWrite.py", line 17, in write
+    line = ser.readline().decode('utf-8').rstrip()
+  File "/usr/lib/python3/dist-packages/serial/serialposix.py", line 509, in read
+    raise SerialException('read failed: {}'.format(e))
+serial.serialutil.SerialException: read failed: device reports readiness to read but returned no data (device disconnected or multiple access on port?)
+Unable to init server: Could not connect: Connection refused
+Unable to init server: Could not connect: Connection refused
+
+(IndoorMain.py:798): Gdk-CRITICAL **: 21:57:04.111: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+
+(IndoorMain.py:798): Gdk-CRITICAL **: 21:57:04.119: gdk_cursor_new_for_display: assertion 'GDK_IS_DISPLAY (display)' failed
+[1m--- Opening /dev/video0...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video0 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mSkipping 2 frames...
+[0m[0mCapturing 1 frames...
+[0m[0mCaptured 3 frames in 0.07 seconds. (44 fps)
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/landingPadCaptures/2020-12-06_215716.jpg'.
+[0m2020-11-29_205142.jpg
+/home/pi/Hextronics/landingPadCaptures/
+/home/pi/Hextronics/landingPadCaptures/2020-11-29_205142.jpg
+[1m--- Opening /dev/video0...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video0 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mSkipping 2 frames...
+[0m[0mCapturing 1 frames...
+[0m[0mCaptured 3 frames in 0.07 seconds. (44 fps)
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/landingPadCaptures/2020-12-06_215718.jpg'.
+[0m2020-11-29_205142.jpg
+/home/pi/Hextronics/landingPadCaptures/
+/home/pi/Hextronics/landingPadCaptures/2020-11-29_205142.jpg
+[1m--- Opening /dev/video0...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video0 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mSkipping 2 frames...
+[0m[0mCapturing 1 frames...
+[0m[0mCaptured 3 frames in 0.07 seconds. (44 fps)
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to 'emptyLandingPad.jpg'.
+[0m[1m--- Opening /dev/video0...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video0 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mSkipping 2 frames...
+[0m[0mCapturing 1 frames...
+[0m[0mCaptured 3 frames in 0.07 seconds. (44 fps)
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/landingPadCaptures/2020-12-06_215804.jpg'.
+[0m[1m--- Opening /dev/video0...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video0 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mSkipping 2 frames...
+[0m[0mCapturing 1 frames...
+[0m[0mCaptured 3 frames in 0.07 seconds. (44 fps)
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/landingPadCaptures/2020-12-06_215808.jpg'.
+[0m[1m--- Opening /dev/video0...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video0 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mSkipping 2 frames...
+[0m[0mCapturing 1 frames...
+[0m[0mCaptured 3 frames in 0.07 seconds. (44 fps)
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/landingPadCaptures/2020-12-06_215810.jpg'.
+[0m[1m--- Opening /dev/video0...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video0 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mSkipping 2 frames...
+[0m[0mCapturing 1 frames...
+[0m[0mCaptured 3 frames in 0.06 seconds. (46 fps)
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/landingPadCaptures/2020-12-06_215812.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215821.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215828.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215835.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215841.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215847.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215855.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215900.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215905.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215910.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215917.jpg'.
+[0mSteppers Enabled!
+on my way!
+Arrived!
+[1m--- Opening /dev/video2...
+[0m[0mTrying source module v4l2...
+[0m[0m/dev/video2 opened.
+[0m[0mNo input was specified, using the first.
+[0m[0mAdjusting resolution from 2048x1080 to 1920x1080.
+[0m[1m--- Capturing frame...
+[0m[0mCaptured frame in 0.00 seconds.
+[0m[1m--- Processing captured image...
+[0m[0mDisabling banner.
+[0m[0mWriting JPEG image to '/home/pi/Hextronics/endEffectorCaptures/2020-12-06_215922.jpg'.
+[0mSteppers Enabled!
+Going to Zero!
+All Zeroed!
+Sending out the Pad!
+150026
+150026
+Roofs Done!
+Arrived!

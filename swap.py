@@ -7,28 +7,12 @@ from datetime import datetime
 
 os.system('sudo stty -F /dev/ttyACM0 -hupcl')
 
-def write(command):
-    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1,dsrdtr=False)
-    ser.flush()
-
-    output = str(command) + " \n"
-    ser.write(output.encode('utf-8'))
-    while True:
-        if ser.in_waiting > 0:
-            line = ser.readline().decode('utf-8').rstrip()
-            print(line)
-            if(line == "Ready to Fly!"):
-                break
-
-
-if __name__ == '__main__':
+def write():
     ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1,dsrdtr=False)
     ser.flush()
 
     output = "swap" + " \n"
-    #print(output)
     ser.write(output.encode('utf-8'))
-
     while True:
         if ser.in_waiting > 0:
             line = ser.readline().decode('utf-8').rstrip()

@@ -15,12 +15,12 @@ import swap
 
 def movecam(arr):
     if (arr[3] == 404):
-        command = "./serialWrite.py movecam_-" + to_str(arr[1]) + "_-" + to_str(arr[2]) + "_0"
+        command = "./serialWrite.py movecam_" + to_str(-arr[1]) + "_" + to_str(-arr[2]) + "_0"
     else:
-        command = "./serialWrite.py movecam_-" + to_str(arr[1]) + "_-" + to_str(arr[2]) + "_-" + to_str(arr[3])
+        command = "./serialWrite.py movecam_" + to_str(-arr[1]) + "_" + to_str(-arr[2]) + "_" + to_str(arr[3])
     os.system(command)
     if(abs(arr[1]) < 10 and abs(arr[2]) < 10 and abs(arr[3]) <10):
-        swap()
+        swap.write()
         #scan()
         #os.system("./serialWrite.py zero")
     else:
@@ -35,8 +35,10 @@ def scan():
         rough_radius_range=(20, 60),
         fine_radius_range=(30, 60),
         qr2but_range=(150, 600),
-        button_color_hsv_low=(25, 50, 100),
-        button_color_hsv_high=(40, 255, 255),
+        button_color_hsv_low=(27, 120, 200),
+        button_color_hsv_high=(35, 180, 255),
+        do_morph=False,
+        #do_thres=False,
         )
 
     #directory for camera image placement
@@ -69,7 +71,25 @@ def to_str(var):
     return str(list(np.reshape(np.asarray(var), (1, np.size(var)))[0]))[1:-1]
 
 def main():
-    position = ["0_420_90", "75_400_90", "-75_400_90", "-125_400_90", "125_400_90"]
+    position = [
+        "0_420_90",
+        "0_400_90",
+        "0_380_90",
+        "0_350_90",
+        "0_300_90",
+        "-75_300_90",
+        "-125_300_90",
+        "-125_350_90",
+        "-75_350_90",
+        "-75_400_90",
+        "-125_400_90",
+        "75_400_90",
+        "125_400_90",
+        "125_350_90",
+        "75_350_90",
+        "75_400_90",
+        "125_400_90",
+    ]
     found = False
     for spot in position:
         command = "./serialWrite.py moveto_" + spot
@@ -86,5 +106,6 @@ def main():
         print("Didn't find it at position: " + spot)
     if(not found):
         print("Scan Failed!")
-        os.system("./serialWrite.py moveto_0_350_90")
+        #os.system("./serialWrite.py moveto_0_350_90")
         os.system("./serialWrite.py zero")
+        os.system("./serialWrite.py pad_send")
