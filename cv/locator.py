@@ -65,7 +65,7 @@ class DroneLocator:
             button_color_hsv_high,
         )
 
-    def __call__(self, img, with_vis = False, with_video=False):
+    def __call__(self, img, with_vis = False, with_video=False, train_offset=False):
         old_img = img.copy()
         img = self.process_img(img)
         # plt.imshow(img)
@@ -102,7 +102,8 @@ class DroneLocator:
         x, y = self.seek_center - qr_center
         # pred_offset = self.offset_model.predict([[x, y, 0]])[0].round()
         pred_offset = self.offset_model.predict([[x, y]])[0].round()
-        # pred_offset = [x, y]
+        if train_offset:
+            pred_offset = np.array([x, y])
         img_ret = old_img.copy()
         if circle_center is not None:
             angle = self.theta(circle_center, qr_center) % 360
@@ -121,8 +122,9 @@ class DroneLocator:
         if circle_center is None and with_video:
             img_ret = self.make_frame(old_img, None, qr_center, "did not find button", pred_offset)
 
-        pred_offset[pred_offset >= 50] = 50
-        pred_offset[pred_offset <= -50] = -50
+        if not train_offset:
+            pred_offset[pred_offset >= 50] = 50
+            pred_offset[pred_offset <= -50] = -50
 
         if with_video:
             return True, pred_offset[0], pred_offset[1], angle, img_ret
