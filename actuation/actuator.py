@@ -16,11 +16,9 @@ class ActuatorController:
         self.ser = serial.Serial(
             serial_port, serial_rate, timeout=serial_timeout, dsrdtr=False
         )
-
-    def write(self, command):
-        self.ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1,dsrdtr=False)
         self.ser.flush()
 
+    def write(self, command):
         starttime = datetime.now()
         output = str(command) + " \n"
         self.ser.write(output.encode('utf-8'))
@@ -55,6 +53,12 @@ class ActuatorController:
     def set_step_1(self):
         self.write("setStep_1")
 
+    def pad_send(self):
+        self.write("pad_send")
+        
+    def pad_receive(self):
+        self.write("pad_recieve")
+        
     def open_roof(self):
         self.write("roof_open")
 

@@ -14,9 +14,9 @@ def imgDiff(img1, img2, threshValue, minArea):
     img1 = cv2.GaussianBlur(img1, (21,21), 0)
     plt.imshow(img1)
     
- #   plt.show(block = False)
- #   plt.pause(1)
-  #  plt.close()
+    plt.show(block = False)
+    plt.pause(1)
+    plt.close()
     
     #img2 = img1[0:300, 0:300]
     img2 = imutils.resize(img2, width = 500)
@@ -24,9 +24,9 @@ def imgDiff(img1, img2, threshValue, minArea):
     img2 = cv2.GaussianBlur(img2, (21,21), 0)
     plt.imshow(img2)
     
- #   plt.show(block = False)
-  #  plt.pause(1)
- #   plt.close()
+    plt.show(block = False)
+    plt.pause(1)
+    plt.close()
     
     #cv2.accumulateWeighted(img1, img2, 0.5)
     frameDelta = cv2.absdiff(img1, img2)
@@ -87,10 +87,10 @@ def checkMotion(threshValue, minArea):
     #directory for camera image placement
     script_dir = "/home/pi/Hextronics/landingPadCaptures/"
 
-    #call the .sh to capture the image
-    os.system('./landingPadCapture.sh')
+    #dont call the .sh to capture the image
+    #os.system('./landingPadCapture.sh')
 
-    #capture the picture's path from the list of files in camera dir
+    #capture the recent picture's path from the list of files in camera dir
     wd = os.getcwd()
     os.chdir("landingPadCaptures")
     filelist = os.popen("ls")
@@ -103,7 +103,7 @@ def checkMotion(threshValue, minArea):
     abs_file_path = os.path.join(script_dir, captured_path)
     
     Image1 = cv2.imread(abs_file_path)
-    Image1 = Image1[300:700, 800:1500]
+    Image1 = Image1[300:400, 800:1500]
     
     time.sleep(1)
     
@@ -126,7 +126,7 @@ def checkMotion(threshValue, minArea):
     abs_file_path = os.path.join(script_dir, captured_path)
     
     Image2 = cv2.imread(abs_file_path)
-    Image2 = Image2[300:700, 800:1500]
+    Image2 = Image2[300:400, 800:1500]
     
     return imgDiff(Image1, Image2, threshValue, minArea)
     
