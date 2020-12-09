@@ -121,6 +121,9 @@ class DroneLocator:
         if circle_center is None and with_video:
             img_ret = self.make_frame(old_img, None, qr_center, "did not find button", pred_offset)
 
+        pred_offset[pred_offset >= 50] = 50
+        pred_offset[pred_offset <= -50] = -50
+
         if with_video:
             return True, pred_offset[0], pred_offset[1], angle, img_ret
         return True, pred_offset[0], pred_offset[1], angle
