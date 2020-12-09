@@ -14,6 +14,8 @@ import swap
 
 
 def movecam(arr, count = 0):
+    print("COUNT")
+    print(count)
     
     if (arr[3] == 404):
         command = "./serialWrite.py movecam_" + to_str(-arr[1]) + "_" + to_str(-arr[2]) + "_0"

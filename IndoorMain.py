@@ -31,9 +31,9 @@ while True:
 
     while True:
         time.sleep(5)
-        if(landed.checkPad(20,300)):
+        if(landed.checkPad(100,1500)):
             print("Something's on the pad!")
-            if(not landed.checkMotion(20,300)):
+            if(not landed.checkMotion(15,200)):
                 print("It Stopped Moving!")
                 break
         print("We're just chillin.")
