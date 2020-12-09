@@ -22,28 +22,35 @@ def movecam(arr, count = 0):
     else:
         command = "./serialWrite.py movecam_" + to_str(-arr[1]) + "_" + to_str(-arr[2]) + "_" + to_str(arr[3])
     os.system(command)
-    if count > 5 and arr[0] == False:
-        main()
+    if count > 10 and arr[0] == False:
+        print("Continuing main")
+        return False
+        #main()
     if(abs(arr[1]) < 5 and abs(arr[2]) < 5 and abs(arr[3]) <5 and arr[0] == True):
         swap.write()
+        return True
         #scan()
         #os.system("./serialWrite.py zero")
     else:
         results = scan()
         if results[0] == True:
-            print("oito")
-            print(results)
+            print(f"Found it, offsets: {(results[1],results[2])}")
             movecam(results)
         else:
             print("to")
             print(arr)
             arr = list(arr)
-            arr[1] /= -2
-            arr[2] /= -2
+            arr[0] = False
+            #arr[1] *= 2
+            #arr[2] *= 2
             arr[1] = int(arr[1])
             arr[2] = int(arr[2])
+            #arr[1] = max(1, int(arr[1]))
+            #arr[2] = max(1, int(arr[2]))
+            arr[3] = 0
             arr = tuple(arr)
             movecam(arr, count + 1)
+        return False
 
 
 def scan():
@@ -102,22 +109,28 @@ def to_str(var):
 def main():
     position = [
         "0_420_90",
-        #"0_400_90",
-        #"0_380_90",
+        "0_400_90",
+        "100_400_90",
+        "100_350_90",
         "0_350_90",
-        #"0_300_90",
-        #"-75_300_90",
-        #"-125_300_90",
-        "-125_350_90",
-        "-75_350_90",
-        "-75_400_90",
-        "-125_400_90",
-        "75_400_90",
-        "125_400_90",
-        "125_350_90",
-        "75_350_90",
-        #"75_400_90",
-        #"125_400_90",
+        "-100_350_90",
+        "-100_400_90",
+        "-50_400_90",
+        "50_400_90",
+        "150_400_90",
+        "150_375_90",
+        "150_350_90",
+        "50_350_90",
+        "-50_350_90",
+        "-150_350_90",
+        "-150_375_90",
+        "-150_400_90",
+        "-100_375_90",
+        "-50_375_90",
+        "0_375_90",
+        "50_375_90",
+        "100_375_90",
+        
     ]
     found = False
     for spot in position:
@@ -128,9 +141,9 @@ def main():
         print(results)
         if(results[0]):
             print("Found it around here: " + spot)
-            found = True
-            movecam(results)
-            break
+            found = movecam(results)
+            print("Continuing to search")
+            continue
 
         print("Didn't find it at position: " + spot)
     if(not found):
