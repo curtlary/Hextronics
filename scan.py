@@ -13,18 +13,35 @@ import cv2
 import swap
 
 
-def movecam(arr):
+def movecam(arr, count = 0):
+    
     if (arr[3] == 404):
         command = "./serialWrite.py movecam_" + to_str(-arr[1]) + "_" + to_str(-arr[2]) + "_0"
     else:
         command = "./serialWrite.py movecam_" + to_str(-arr[1]) + "_" + to_str(-arr[2]) + "_" + to_str(arr[3])
     os.system(command)
-    if(abs(arr[1]) < 5 and abs(arr[2]) < 5 and abs(arr[3]) <5):
+    if count > 5 and arr[0] == False:
+        main()
+    if(abs(arr[1]) < 5 and abs(arr[2]) < 5 and abs(arr[3]) <5 and arr[0] == True):
         swap.write()
         #scan()
         #os.system("./serialWrite.py zero")
     else:
-        movecam(scan())
+        results = scan()
+        if results[0] == True:
+            print("oito")
+            print(results)
+            movecam(results)
+        else:
+            print("to")
+            print(arr)
+            arr = list(arr)
+            arr[1] /= -2
+            arr[2] /= -2
+            arr[1] = int(arr[1])
+            arr[2] = int(arr[2])
+            arr = tuple(arr)
+            movecam(arr, count + 1)
 
 
 def scan():
