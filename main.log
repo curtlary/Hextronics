@@ -504,3 +504,151 @@ Arrived!
 Steppers Enabled!
 on my way!
 Arrived!
+
+/home/pi/Hextronics/landingPadCaptures/
+/home/pi/Hextronics/landingPadCaptures/
+
+/home/pi/Hextronics/landingPadCaptures/
+/home/pi/Hextronics/landingPadCaptures/
+
+/home/pi/Hextronics/landingPadCaptures/
+/home/pi/Hextronics/landingPadCaptures/
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Steppers Disabled!
+SnigottePd325045
+Steppers Enabled!
+on my way!
+Arrived!
+Sending out the Pad!
+54367
+54367
+Roofs Done!
+Arrived!
+Opening Gripper!
+Steppers Enabled!
+Going to Zero!
+All Zeroed!
+J1 traveled: 103
+J2 traveled: -104
+J3 traveled: 93
+J4 traveled: -97
+Arrived!
+2020-12-08_182036.jpg
+We're just chillin.
+2020-12-08_182043.jpg
+We're just chillin.
+2020-12-08_182050.jpg
+Something's on the pad!
+It Stopped Moving!
+Drone Landed!
+Bringing in the Pad!
+118899
+Roofs Done!
+Arrived!
+Scanning!
+./serialWrite.py moveto_0_420_90
+2020-12-08_182103.jpg
+(False, 0, 0, 0)
+Didn't find it at position: 0_420_90
+./serialWrite.py moveto_0_400_90
+2020-12-08_182111.jpg
+(False, 0, 0, 0)
+Didn't find it at position: 0_400_90
+./serialWrite.py moveto_0_380_90
+2020-12-08_182116.jpg
+(False, 0, 0, 0)
+Didn't find it at position: 0_380_90
+./serialWrite.py moveto_0_350_90
+2020-12-08_182124.jpg
+(False, 0, 0, 0)
+Didn't find it at position: 0_350_90
+./serialWrite.py moveto_0_300_90
+2020-12-08_182129.jpg
+(False, 0, 0, 0)
+Didn't find it at position: 0_300_90
+./serialWrite.py moveto_-75_300_90
+2020-12-08_182133.jpg
+(False, 0, 0, 0)
+Didn't find it at position: -75_300_90
+./serialWrite.py moveto_-125_300_90
+2020-12-08_182138.jpg
+(False, 0, 0, 0)
+Didn't find it at position: -125_300_90
+./serialWrite.py moveto_-125_350_90
+2020-12-08_182142.jpg
+(True, -4.0, -14.0, 159.20331327461656)
+Found it around here: -125_350_90
+2020-12-08_182149.jpg
+2020-12-08_182155.jpg
+2020-12-08_182201.jpg
+205
+ofsDn!
+rvdStepesEald
+vd
+rprDnArie!
+Arrived!
+Steppers Enabled!
+on my way!
+337969
+337969
+Roofs Done!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Gripper Done
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Steppers Enabled!
+on my way!
+Arrived!
+Gripper Done
+Arrived!
