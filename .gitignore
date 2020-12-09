@@ -19,3 +19,4 @@ cv/checkpoint
 .ipynb_checkpoints
 
 mainErr.log
+planning/__pycache__/
