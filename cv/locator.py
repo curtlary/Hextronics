@@ -27,7 +27,7 @@ class DroneLocator:
         button_color_hsv_high: Tuple[int, int, int] = (40, 255, 255),
         # drone info params
         seek_center: Tuple[int, int] = (960, 650), # pixel coordinates of 0,0,0 quad
-        angle_offset: int = 87,
+        angle_offset: int = 85,
         linreg_path: str = "offset_model.pkl",
         #linreg_path: str = "../cv/offset_model.pkl",
         # Image manipulations
@@ -87,7 +87,7 @@ class DroneLocator:
             return False, 0, 0, 0
         qr_center = self.get_qr_center(decoded_objs)
 
-        pred_offset = self.offset_model.predict([self.seek_center - qr_center])[0].round()
+        # pred_offset = self.seek_center - qr_center
 
 
         if self.do_show_circles:
@@ -99,9 +99,16 @@ class DroneLocator:
 
         angle = 404 # value for not found circle center
 
+        x, y = self.seek_center - qr_center
+        # pred_offset = self.offset_model.predict([[x, y, 0]])[0].round()
+        pred_offset = self.offset_model.predict([[x, y]])[0].round()
+        # pred_offset = [x, y]
         img_ret = old_img.copy()
         if circle_center is not None:
             angle = self.theta(circle_center, qr_center) % 360
+            # pred_offset = self.offset_model.predict([[x, y, angle]])[0].round()
+            # pred_offset = [x, y]
+
             if angle > 180:
                 angle = angle -360
             if with_vis:

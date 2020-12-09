@@ -20,3 +20,4 @@ cv/checkpoint
 
 mainErr.log
 planning/__pycache__/
+cv/offset_model.pkl
