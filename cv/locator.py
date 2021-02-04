@@ -18,16 +18,15 @@ class DroneLocator:
     def __init__(
         self,
         # circle finder params
-        rough_radius_range: Tuple[int, int] = (30, 50),
-        fine_radius_range: Tuple[int, int] = (30, 67),
+        rough_radius_range: Tuple[int, int] = (40, 120),
+        fine_radius_range: Tuple[int, int] = (55, 70),
         canny_thresholds: Tuple[int, int] = (100, 10),
         qr2but_range: Tuple[int, int] = (163, 193),
         use_color_filter: bool = True,
         button_color_hsv_low: Tuple[int, int, int] = (15, 50, 100),
         button_color_hsv_high: Tuple[int, int, int] = (40, 255, 255),
         # drone info params
-        seek_center: Tuple[int, int] = (954, 620
-                                        ), # pixel coordinates of 0,0,0 quad
+        seek_center: Tuple[int, int] = (905, 225), # pixel coordinates of 0,0,0 quad
         angle_offset: int = 85,
         linreg_path: str = "offset_model.pkl",
         #linreg_path: str = "../cv/offset_model.pkl",
@@ -57,6 +56,7 @@ class DroneLocator:
         self.morph_kernel = np.ones((morph_kernel, morph_kernel), np.uint8)
         
         self.seek_center = np.array(seek_center)
+        self.but_center = seek_center + np.array([0, 325])
         self.seek_but = np.array(seek_center)
         self.seek_but[1] += 100
         # button
@@ -83,34 +83,28 @@ class DroneLocator:
                 # plt.show(block = False)
                 # plt.pause(2)
                 # plt.close()
-            if with_video:
-                return False, 0, 0, 0, old_img
+            if circles is not None and not train_offset:
+                circle_center = circles[0][:2]
+                x, y = self.but_center - circle_center
+                pred_offset = self.offset_model.predict([[x, y]])[0].round()
+                if with_vis:
+                    self.visualize_results(old_img, circle_center, None, None, pred_offset)
+                return True,pred_offset[0], pred_offset[1], 404
             return False, 0, 0, 0
         qr_center = self.get_qr_center(decoded_objs)
-
-        # pred_offset = self.seek_center - qr_center
-
-
-        if self.do_show_circles:
-            self.show_circles(old_img, circles, qr_center)
+        angle = 404 # value for not found circle center
         if circles is None:
             circle_center = None
         else:
             circle_center = self.matching_circle_center(circles, qr_center)
 
-        angle = 404 # value for not found circle center
-
         x, y = self.seek_center - qr_center
-        # pred_offset = self.offset_model.predict([[x, y, 0]])[0].round()
         pred_offset = self.offset_model.predict([[x, y]])[0].round()
         if train_offset:
             pred_offset = np.array([x, y])
         img_ret = old_img.copy()
         if circle_center is not None:
             angle = self.theta(circle_center, qr_center) % 360
-            # pred_offset = self.offset_model.predict([[x, y, angle]])[0].round()
-            # pred_offset = [x, y]
-
             if angle > 180:
                 angle = angle -360
             if with_vis:
@@ -133,14 +127,20 @@ class DroneLocator:
     
     def visualize_results(self, img, circle_center, qr_center, angle, pred_offset):
         if circle_center is not None:
-            plt.scatter(circle_center[0], circle_center[1])
-            plt.plot([circle_center[0], qr_center[0] ], [circle_center[1], qr_center[1]])
-            cv2.circle(img, (int(circle_center[0]), int(circle_center[1])), 47, (255, 0, 255), 3)
-        
+            if qr_center is not None:
+                plt.scatter(circle_center[0], circle_center[1])
+                plt.plot([circle_center[0], qr_center[0] ], [circle_center[1], qr_center[1]])
+                cv2.circle(img, (int(circle_center[0]), int(circle_center[1])), 47, (255, 0, 255), 3)
+            else:
+                cv2.circle(img, (int(circle_center[0]), int(circle_center[1])), 47, (255, 0, 255), 3)
+
         plt.title(f"Pred Offset: {pred_offset}, Angle: {angle}")
         plt.imshow(img)
-        plt.scatter(qr_center[0], qr_center[1])
-        plt.plot([self.seek_center[0], qr_center[0] ], [self.seek_center[1], qr_center[1]])
+        if qr_center is not None:
+            plt.scatter(qr_center[0], qr_center[1])
+            plt.plot([self.seek_center[0], qr_center[0] ], [self.seek_center[1], qr_center[1]])
+        elif circle_center is not None:
+            plt.plot([self.but_center[0], circle_center[0]], [self.but_center[1], circle_center[1]])
         plt.show(block = False)
         plt.pause(1)
         plt.close()
@@ -172,11 +172,6 @@ class DroneLocator:
                 radius = i[2]
                 cv2.circle(img, center, radius, (255, 0, 255), 3)
 
-        # plt.title("All circles found")
-        # plt.imshow(img)
-
-       # plt.show()
-
         img = orig_img.copy()
         if circles is not None:
             circles = np.uint16(np.around(circles))
@@ -202,13 +197,15 @@ class DroneLocator:
     
     def get_circles(self, im):
         im = self.color_filt(im)
+        # plt.imshow(im)
+        # plt.show()
         p1, p2 = self.canny_thresholds
         min_r, max_r = self.rough_radius_range
         circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, 20,
-                                   param1=100, param2=10, minRadius=30, maxRadius=50)
-        # circles = cv2.HoughCircles(im, cv2.HOUGH_GRADIENT, 1, 20,
-        #                            param1=p1, param2=p2, minRadius=min_r, maxRadius=max_r)
+                                   param1=100, param2=10, minRadius=min_r, maxRadius=max_r)
+        # print(circles)
         if circles is not None:
+            # print(circles)
             circles = np.around(circles)
             return circles[0]
         return []
