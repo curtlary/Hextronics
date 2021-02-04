@@ -5,13 +5,195 @@ from sklearn.cluster import DBSCAN
 from PIL import Image
 from pyzbar import pyzbar
 import time
-from typing import Tuple 
+from typing import Tuple, Dict, List
 import pickle as pkl
 import numpy as np
 import cv2
 import os
 from statistics import mode
+
     
+class Locator:
+
+    def __init__(
+            self,
+            name: str,
+    ):
+        self.name = name
+
+    def find(self, img):
+        return None
+
+    def __str__(self):
+        return f"{self.name}"
+
+class CircleQRPoseEstimator:
+    def __init__(
+            self,
+            circle_kwargs: Dict = None,
+            qr_kwargs: Dict = None,
+            seek_center: Tuple[int, int] = (954, 620),
+            linreg_path: str = "offset_model.pkl",
+    ):
+
+        self.offset_model = pkl.load(open(linreg_path, "rb"))
+        if circle_kwargs is not None:
+            self.circle = CircleLocator(**circle_kwargs)
+        else:
+            self.circle = CircleLocator()
+
+        if qr_kwargs is not None:
+            self.qr = QRLocator(**qr_kwargs)
+        else:
+            self.qr = QRLocator()
+
+        self.seek_center = np.array(seek_center)
+
+    def __call__(self, img, train_offset = False):
+        circle_centers = self.circle.find(img)
+        qr_status, qr_center = self.qr.find(img)
+
+        angle = 404 # value for not found circle center
+
+
+        status = len(circle_centers) > 0 or qr_status
+
+        pred_offset = (0,0)
+
+        if status:
+            if qr_status:
+                x, y = self.seek_center - qr_center
+                pred_offset = self.offset_model.predict([[x, y]])[0].round()
+            else:
+                x, y = self.seek_center - circle_centers[0][:2]
+                pred_offset = self.offset_model.predict([[x, y]])[0].round()
+
+            if train_offset:
+                pred_offset = np.array([x, y])
+            else:
+                pred_offset[pred_offset >= 50] = 50
+                pred_offset[pred_offset <= -50] = -50
+
+        return status, pred_offset[0], pred_offset[1], angle
+
+
+class QRLocator(Locator):
+
+    def __init__(
+            self,
+            # Image manipulations
+            do_clahe: bool = True,
+            do_thres: bool = True,
+            do_morph: bool = True,  # erode, dilate, etc...
+            kernel_shape: int = (3, 3),
+    ):
+        super().__init__(str(type(self)))
+        self.do_clahe = do_clahe
+        self.do_thres = do_thres
+        self.do_morph = do_morph
+        self.morph_kernel = np.ones(kernel_shape, np.uint8)
+
+
+    def find(self, img):
+        img = self.process_img(img)
+
+        decoded_objs = pyzbar.decode(img)
+        if len(decoded_objs) == 0:
+            return False, (0, 0)
+        qr_center = self.get_qr_center(decoded_objs)
+        return True, qr_center
+
+    def process_img(self, img):
+        """ Applies transforms to the image to make it good
+            - Histogram Equalization (Still experimenting)
+            - Image dewarping (Planning)
+            - thresholding to make QR code more contrastive
+            - Dilation + Erosion (Still experimenting)
+        """
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        if self.do_thres:
+            img = cv2.adaptiveThreshold(
+                img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,65,2
+            )
+        if self.do_morph:
+            img = cv2.dilate(img, self.morph_kernel, iterations = 1)
+            img = cv2.erode(img, self.morph_kernel, iterations = 1)
+        return img
+
+
+    def get_qr_center(self, objs):
+        points = objs[0].polygon
+
+        if len(points) > 4:
+            hull = cv2.convexHull(np.array([point for point in points], dtype=np.float32))
+            hull = list(map(tuple, np.squeeze(hull)))
+        else:
+            hull = points
+        hull = np.array([(p.x, p.y) for p in hull])
+        center = hull.mean(axis = 0)
+        return center
+
+
+class CircleLocator(Locator):
+    def __init__(
+            self,
+            # circle finder params
+            rough_radius_range: Tuple[int, int] = (30, 50),
+            fine_radius_range: Tuple[int, int] = (30, 67),
+            canny_thresholds: Tuple[int, int] = (100, 10),
+            use_color_filter: bool = True,
+            button_color_hsv_low: Tuple[int, int, int] = (15, 50, 100),
+            button_color_hsv_high: Tuple[int, int, int] = (40, 255, 255),
+            do_morph: bool = True,  # erode, dilate, etc...
+            kernel_shape: int = (3, 3),
+            morph_iters: int = 2,
+    ):
+        super().__init__(str(type(self)))
+
+        self.rough_radius_range = rough_radius_range
+        self.fine_radius_range = fine_radius_range
+        self.canny_thresholds = canny_thresholds
+
+        self.use_color_filter = use_color_filter
+        self.hsv_range = (
+            button_color_hsv_low,
+            button_color_hsv_high,
+        )
+
+        self.do_morph = do_morph
+        self.morph_kernel = np.ones(kernel_shape, np.uint8)
+        self.morph_iters = morph_iters
+
+    def find(self, im):
+        im = self.color_filt(im)
+        p1, p2 = self.canny_thresholds
+        min_r, max_r = self.rough_radius_range
+        circles = cv2.HoughCircles(
+            im,
+            cv2.HOUGH_GRADIENT,
+            1,
+            20,
+            param1=p1,
+            param2=p2,
+            minRadius=min_r,
+            maxRadius=max_r,
+        )
+        if circles is not None:
+            circles = np.around(circles)
+            return circles[0]
+        return []
+
+    def color_filt(self, img):
+        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+        lower = np.array(self.hsv_range[0])
+        upper = np.array(self.hsv_range[1])
+        mask = cv2.inRange(hsv, lower, upper)
+        mask = cv2.erode(
+            mask,
+            self.morph_kernel,
+            iterations=self.morph_iters,
+        )
+        return mask
 
 class DroneLocator:
     
